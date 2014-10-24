@@ -1,19 +1,20 @@
 :load
 @echo off & setlocal enabledelayedexpansion
 mode con:cols=60 lines=40
-if not exist %appdata%\Mellow\Dragonfruit mkdir %appdata%\Mellow\Dragonfruit
-echo %cd%> %appdata%\Mellow\Dragonfruit\temp.txt
+if not exist %appdata%\mellow\pitaya mkdir %appdata%\mellow\pitaya
+echo %cd%> %appdata%\mellow\pitaya\temp.txt
 
 :var
-set version=1.0.0
-set data=%appdata%\Mellow\Dragonfruit
-set cache=%data%\cache.txt
-set scripts=%data%\scripts
-set settings=%data%\settings.txt
-set /p main= < %data%\temp.txt
+set version=1.2.7
+set app=%appdata%\mellow\pitaya
+set cache=%app%\cache.txt
+set scripts=%app%\scripts
+set settings=%app%\settings.txt
+set /p main= < %app%\temp.txt
 set adb=%main%\adb
 set files=%main%\files
 set backups=%files%\backups
+
 if not exist %files% mkdir %files%
 if not exist %backups% mkdir %backups%
 if not exist %scripts% mkdir %scripts%
@@ -28,7 +29,7 @@ for /f "tokens=2 delims==" %%b in ('find "theme" ^<%settings%') do set theme=%%b
 for /f "tokens=2 delims==" %%c in ('find "wireless_adb" ^<%settings%') do set adbw=%%c
 for /f "tokens=2 delims==" %%d in ('find "show_errors" ^<%settings%') do set errors=%%d
 if not %prev% == %version% (
-	msg * "A different version of Dragonfruit has been detected.  Settings have been reset and unnecessary files were removed."
+	msg * "Pitaya has been updated. Settings have been reset and unnecessary files were removed."
 	del %cache%
 	del %settings%
 	goto var
@@ -36,30 +37,29 @@ if not %prev% == %version% (
 if %errors% == true (if not %errorlevel% == 0 goto err)
 
 :ini
-title Dragonfruit v%version%
+title pitaya v%version%
 color %theme%
 cd %adb%
 
 :main
 cls
-echo ____________________________________________________________
 echo.
-echo                          Main Menu
+echo Pitaya ADB toolkit
 echo.
 echo ____________________________________________________________
 echo.
 echo [BASIC]
 echo.
 echo 1. Reboot
-echo 2. Manage Files
-echo 3. Manage Apps
+echo 2. Manage files
+echo 3. Manage apps
 echo.
 echo [ADVANCED]
 echo.
 echo 4. Flash Zip / Img
-echo 5. Backup System (WIP)
-echo 6. ADB Shell
-echo 7. User Scripts (WIP)
+echo 5. Backup system (WIP)
+echo 6. ADB shell
+echo 7. User scripts (WIP)
 echo.
 echo [OTHER]
 echo.
@@ -82,9 +82,8 @@ goto main
 
 :reboot
 cls
-echo ____________________________________________________________
 echo.
-echo                           Reboot
+echo Reboot
 echo.
 echo ____________________________________________________________
 echo.
@@ -111,9 +110,8 @@ goto reboot
 
 :manageFiles
 cls
-echo ____________________________________________________________
 echo.
-echo                       Manage Files
+echo Manage files
 echo.
 echo ____________________________________________________________
 echo.
@@ -128,17 +126,16 @@ goto manageFiles
 
 :push
 cls
-echo ____________________________________________________________
 echo.
-echo                 Push files to your device
+echo Push files to your device
 echo.
 echo Local: %files%
 echo Remote: /sdcard/
 echo.
 echo ____________________________________________________________
 echo.
-echo Which file would you like to push? (Include Extension)
-echo example.zip
+echo Which file would you like to push?
+echo filename.zip
 echo.
 set /p push=File: 
 cd %adb%
@@ -148,17 +145,16 @@ goto var
 
 :pull
 cls
-echo ____________________________________________________________
 echo.
-echo                 Pull files from your device
+echo Pull files from your device
 echo.
 echo Local: %files%
 echo Remote: /sdcard/
 echo.
 echo ____________________________________________________________
 echo.
-echo Which file would you like to pull? (Include Extension)
-echo example.zip
+echo Which file would you like to pull?
+echo filename.zip
 echo.
 set /p pull=File: 
 cd %adb%
@@ -168,9 +164,8 @@ goto var
 
 :manageApps
 cls
-echo ____________________________________________________________
 echo.
-echo                        Manage Apps
+echo Manage apps
 echo.
 echo ____________________________________________________________
 echo.
@@ -185,16 +180,15 @@ goto manageApps
 
 :install
 cls
-echo ____________________________________________________________
 echo.
-echo                 Install app on device
+echo Install app on device
 echo.
 echo Local: %files%
 echo.
 echo ____________________________________________________________
 echo.
-echo Which app would you like to install? (Include Extension)
-echo example.apk
+echo Which app would you like to install?
+echo filename.apk
 echo.
 set /p install=App: 
 cd %adb%
@@ -204,16 +198,15 @@ goto var
 
 :uninstall
 cls
-echo ____________________________________________________________
 echo.
-echo                 Uninstall app from device
+echo Uninstall app from device
 echo.
 echo Local: %files%
 echo.
 echo ____________________________________________________________
 echo.
-echo Which app would you like to uninstall? (Include Extension)
-echo example.apk
+echo Which app would you like to uninstall?
+echo filename.apk
 echo.
 set /p uninstall=App: 
 cd %adb%
@@ -223,9 +216,8 @@ goto var
 
 :flash
 cls
-echo ____________________________________________________________
 echo.
-echo                        Flash Files
+echo Flash files
 echo.
 echo ____________________________________________________________
 echo.
@@ -240,16 +232,15 @@ goto flash
 
 :zip
 cls
-echo ____________________________________________________________
 echo.
-echo                         Flash ROM   
+echo Flash ROM   
 echo.
 echo Local: %files%
 echo.
 echo ____________________________________________________________
 echo.
-echo Which ROM would you like to flash? (Include Extension)
-echo example.zip
+echo Which ROM would you like to flash?
+echo filename.zip
 echo.
 set /p zip=ROM: 
 cd %adb%
@@ -259,29 +250,26 @@ goto var
 
 :img
 cls
-echo ____________________________________________________________
 echo.
-echo                      Flash Recovery
+echo Flash recovery
 echo.
 echo Local: %files%
 echo.
 echo ____________________________________________________________
 echo.
-echo Which recovery would you like to flash? (Include Extension)
-echo example.img
+echo Which recovery would you like to flash?
+echo filename.img
 echo.
-set /p img=Recovery Image: 
+set /p img=Recovery image: 
 cd %adb%
 if %img% == 0 goto main
 fastboot flash recovery %files%\%img%
 goto var
 
 :backup
-msg * "This feature is unfinished and still a WIP."
 cls
-echo ____________________________________________________________
 echo.
-echo                          Backup
+echo Backup
 echo.
 echo ____________________________________________________________
 echo.
@@ -297,22 +285,21 @@ pause
 goto var
 
 :shell
-msg * Coming soon - this will allow remote access to your android device.
+msg * "Coming soon: remote access to your android device."
 goto var
 
 :scripts
 msg * "This feature is unfinished and still a WIP."
 cls
-cd %scripts%
-echo ____________________________________________________________
 echo.
-echo                       User Scripts  
+echo Scripts  
 echo.
 echo ____________________________________________________________
 echo.
 echo 1. View Scripts
 echo.
 set /p scripts=Option #: 
+cd %scripts%
 if %scripts% == 0 goto main
 if %scripts% == 1 dir /b *.txt
 pause
@@ -320,11 +307,10 @@ goto var
 
 :wireless
 cls
-echo ____________________________________________________________
 echo.
-echo               Perform ADB commands over WiFi
+echo Wireless ADB
 echo.
-echo  Must be enabled on a supported ROM under developer tools.
+echo Enabled on supported ROMs under developer tools
 echo.
 echo ____________________________________________________________
 echo.
@@ -346,9 +332,8 @@ goto var
 
 :options
 cls
-echo ____________________________________________________________
 echo.
-echo                       	   Options
+echo Options
 echo.
 echo ____________________________________________________________
 echo.
@@ -358,7 +343,7 @@ echo 3. Reset settings
 echo.
 set /p options=Option #: 
 if %options% == 0 goto main
-if %options% == 1 start https://github.com/sociallymellow/dragonfruit/archive/master.zip
+if %options% == 1 start https://github.com/sociallymellow/pitaya/archive/master.zip
 if %options% == 2 start %settings%
 if %options% == 3 (
 	del %settings%
@@ -368,7 +353,7 @@ goto options
 
 :err
 echo.
-echo ########################## error ###########################
+echo ########################## ERR ##########################
 echo.
 verify >nul
 pause
