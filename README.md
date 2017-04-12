@@ -1,4 +1,4 @@
-# pitaya
+# Pitaya
 Windows ADB helper
 
 > This program is not regularly updated
