@@ -1,6 +1,7 @@
-pitaya
-======
+# pitaya
+Windows ADB helper
 
-windows adb toolbox
+> This program is not regularly updated
 
-Pitaya is a universal toolbox for Android devices. The goal of this project was to prevent typos when working with the command line.
+## About
+This script simplifies the usage of ADB commands when communicating with your Android device from a Windows PC.
